@@ -151,7 +151,7 @@ function step(dir) {
     if (L.boxesOnGoal(st) > before) { sfx.goal(); flash = 1; flashCell = st.boxes.find((b) => st.goals[b] && true); setTimeout(() => { flash = 0; draw(); }, 140); } else sfx.push();
   } else sfx.step();
   draw(); updateHud();
-  if (L.isWon(st)) setTimeout(onClear, 350);
+  if (L.isWon(st)) { solvedShown = true; setTimeout(onClear, 350); }      // 다 올렸으면 바로 잠가서, 클리어 창이 뜨기 전에 더 움직여 판이 바뀌지 않게
 }
 function undo() {
   if (!playing || solvedShown) return;
@@ -165,7 +165,7 @@ function restart() {
 }
 const starsFor = (pushes, par) => (pushes <= par ? 3 : pushes <= Math.ceil(par * 1.5) ? 2 : 1);
 function onClear() {
-  if (solvedShown) return;
+  if (!L.isWon(st)) return;
   solvedShown = true; sfx.win(); tutorialSignal('clear');
   const par = LEVELS[level].par, stars = starsFor(st.pushes, par);
   const prev = done[level];
